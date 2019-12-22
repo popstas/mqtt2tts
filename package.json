@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Receive text from MQTT and TTS via Google TTS on Windows",
   "main": "index.js",
-  "start": "index.js",
   "scripts": {
+    "start": "node index.js"
   },
   "author": "Stanislav Popov",
   "license": "MIT",
