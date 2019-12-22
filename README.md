@@ -17,7 +17,9 @@ Working only on Windows.
 ## Linux bash verion
 Requirements: gtts, playogg.
 
-```
+Create `tts-say` script:
+
+``` bash
 #!/bin/bash
 set -eu
 
@@ -35,4 +37,9 @@ else
 	gtts-cli --nocheck --lang ru "$in" --output /tmp/tts.mp3
 	playogg /tmp/tts.mp3
 fi
+```
+
+Usage:
+``` bash
+echo "проверка" | tts-say
 ```

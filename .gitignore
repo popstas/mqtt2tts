@@ -7,3 +7,5 @@ npm-debug.log
 config.js
 
 *.mp3
+
+data/

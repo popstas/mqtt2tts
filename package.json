@@ -1,6 +1,6 @@
 {
   "name": "mqtt2tts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Receive text from MQTT and TTS via Google TTS on Windows",
   "main": "index.js",
   "scripts": {
