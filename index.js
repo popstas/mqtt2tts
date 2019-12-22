@@ -1,5 +1,6 @@
-const mqtt = require('mqtt');
+const fs = require('fs');
 const execSync = require('child_process').execSync;
+const mqtt = require('mqtt');
 const config = require('./config');
 
 const mp3Path = './tts.mp3';
@@ -12,12 +13,14 @@ const client = mqtt.connect(`mqtt://${config.mqtt.host}`, {
 });
 
 const ttsSay = msg => {
-  const cmd = `gtts-cli --nocheck --lang ru "${msg}" --output "${mp3Path}"`;
+  const mp3PathTemp = mp3Path.replace('.mp3', Math.random() + '.mp3');
+  const cmd = `gtts-cli --nocheck --lang ru "${msg}" --output "${mp3PathTemp}"`;
   // console.log('cmd: ', cmd);
   const ttsOutput = execSync(cmd);
   // console.log('ttsOutput: ', ttsOutput);
-  const mp3Output = execSync(`cmdmp3 "${mp3Path}"`);
+  const mp3Output = execSync(`cmdmp3 "${mp3PathTemp}"`);
   // console.log('mp3Output: ', mp3Output);
+  fs.unlinkSync(mp3PathTemp);
   return mp3Output;
 };
 
