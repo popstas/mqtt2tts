@@ -13,3 +13,26 @@ Working only on Windows.
 
 ## Usage
 `npm start`
+
+## Linux bash verion
+Requirements: gtts, playogg.
+
+```
+#!/bin/bash
+set -eu
+
+in="${1:-/dev/stdin}"
+
+if [ "$in" = "/dev/stdin" ]; then
+	while read line
+	do
+		line="$(echo "$line" | sed 's/^log //g')"
+		echo "tts-say: $line"
+		gtts-cli --nocheck --lang ru "$line" --output /tmp/tts.mp3
+		playogg /tmp/tts.mp3
+	done < "$in"
+else
+	gtts-cli --nocheck --lang ru "$in" --output /tmp/tts.mp3
+	playogg /tmp/tts.mp3
+fi
+```
