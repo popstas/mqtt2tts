@@ -12,7 +12,7 @@ Working only on Windows.
 - Edit `config.js`
 
 ## Usage
-`npm start`
+`npm start` or just open `node start.lnk`.
 
 ## Linux bash verion
 Requirements: gtts, playogg.
