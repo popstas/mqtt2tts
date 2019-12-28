@@ -23,7 +23,7 @@ const ttsSay = msg => {
     const ttsOutput = execSync(cmd);
   }
   // console.log('ttsOutput: ', ttsOutput);
-  const mp3Output = execSync(`cmdmp3 "${mp3PathFile}"`);
+  const mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`);
   // console.log('mp3Output: ', mp3Output);
   return mp3Output;
 };

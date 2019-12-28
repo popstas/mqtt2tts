@@ -1,9 +1,10 @@
 module.exports = {
   mqtt: {
-    host: 'myhome.ru',
+    host: 'localhost',
     port: 1883,
     user: 'user',
     password: 'password'
   },
-  ttsTopic: 'tts'
+  ttsTopic: 'tts',
+  playCommand: 'cmd2mp3'
 };
