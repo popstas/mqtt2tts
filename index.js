@@ -15,6 +15,7 @@ const log = msg => {
 };
 
 const ttsSay = msg => {
+  log(msg);
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
   if (!fs.existsSync(mp3PathFile)) {
     const cmd = `gtts-cli --nocheck --lang ru "${msg}" --output "${mp3PathFile}"`;
@@ -45,11 +46,11 @@ client.on('offline', () => {
 client.subscribe(config.ttsTopic);
 client.on('message', (topic, message) => {
   const msg = message.toString().toLowerCase();
-  log(msg);
   try {
     ttsSay(msg);
   } catch (e) {
     console.error(`error ttsSay: ${msg}`);
     console.error(e);
+    setTimeout(() => ttsSay(msg), 1000);
   }
 });
