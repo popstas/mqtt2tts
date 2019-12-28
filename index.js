@@ -18,7 +18,7 @@ const ttsSay = msg => {
   log(msg);
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
   if (!fs.existsSync(mp3PathFile)) {
-    const cmd = `gtts-cli --nocheck --lang ru "${msg}" --output "${mp3PathFile}"`;
+    const cmd = `gtts-cli --nocheck --lang ${config.lang} "${msg}" --output "${mp3PathFile}"`;
     // console.log('cmd: ', cmd);
     const ttsOutput = execSync(cmd);
   }
