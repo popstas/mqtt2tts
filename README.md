@@ -32,8 +32,10 @@ Default host: `localhost:1883`.
 
 Default MQTT topic: `tts`.
 
+Tool will save mp3 to `./data` directory for cache.
+
 ## Linux bash verion
-Requirements: gtts, playogg.
+Requirements: gtts, playogg (ogg123 package).
 
 Create `tts-say` script:
 
