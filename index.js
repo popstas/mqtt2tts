@@ -3,18 +3,16 @@ const execSync = require('child_process').execSync;
 const mqtt = require('mqtt');
 const config = require('./config');
 
+// for tts cache
 const mp3Path = './data';
-
 if (!fs.existsSync(mp3Path)) {
   fs.mkdir(mp3Path);
 }
 
-console.log('Connecting to MQTT...');
-const client = mqtt.connect(`mqtt://${config.mqtt.host}`, {
-  port: config.mqtt.port,
-  username: config.mqtt.user,
-  password: config.mqtt.password
-});
+const log = msg => {
+  const d = new Date().toLocaleString();
+  console.log(`${d} ${msg}`);
+};
 
 const ttsSay = msg => {
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
@@ -29,21 +27,29 @@ const ttsSay = msg => {
   return mp3Output;
 };
 
+log('Connecting to MQTT...');
+const client = mqtt.connect(`mqtt://${config.mqtt.host}`, {
+  port: config.mqtt.port,
+  username: config.mqtt.user,
+  password: config.mqtt.password
+});
+
 client.on('connect', () => {
-  console.log('MQTT connected to ' + config.mqtt.host);
-  client.subscribe(config.ttsTopic);
-  client.on('message', (topic, message) => {
-    const msg = message.toString().toLowerCase();
-    console.log(`tts: ${msg}`);
-    try {
-      ttsSay(msg);
-    } catch (e) {
-      console.error(`error ttsSay: ${msg}`);
-      console.error(e);
-    }
-  });
+  log('MQTT connected to ' + config.mqtt.host);
 });
 
 client.on('offline', () => {
-  console.log('MQTT offline');
+  log('MQTT offline');
+});
+
+client.subscribe(config.ttsTopic);
+client.on('message', (topic, message) => {
+  const msg = message.toString().toLowerCase();
+  log(msg);
+  try {
+    ttsSay(msg);
+  } catch (e) {
+    console.error(`error ttsSay: ${msg}`);
+    console.error(e);
+  }
 });
