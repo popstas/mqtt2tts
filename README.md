@@ -23,7 +23,7 @@ Clone this repository.
 ## Config
 - Copy `config.example.js` to `config.js`
 - Edit `config.js`
-- For Ubuntu replace `cmd2mp3` to `playogg` in `config.js`
+- For Ubuntu replace `cmdmp3` to `playogg` in `config.js`
 
 ## Usage
 `npm start` or just open `node start.lnk`.

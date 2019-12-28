@@ -6,6 +6,6 @@ module.exports = {
     password: 'password'
   },
   ttsTopic: 'tts',
-  playCommand: 'cmd2mp3',
+  playCommand: 'cmdmp3',
   lang: 'ru'
 };
