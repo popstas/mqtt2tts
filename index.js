@@ -10,7 +10,11 @@ if (!fs.existsSync(mp3Path)) {
 }
 
 const log = msg => {
-  const d = new Date().toLocaleString();
+  const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+  const d = new Date(Date.now() - tzoffset).
+    toISOString().
+    replace(/T/, ' ').      // replace T with a space
+    replace(/\..+/, '')     // delete the dot and everything after
   console.log(`${d} ${msg}`);
 };
 
@@ -18,18 +22,24 @@ const ttsSay = msg => {
   log(msg);
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
 
-  // generate mp3 with gTTS
-  if (!fs.existsSync(mp3PathFile)) {
-    const cmd = `gtts-cli --nocheck --lang ${config.lang} "${msg}" --output "${mp3PathFile}"`;
-    // console.log('cmd: ', cmd);
-    const ttsOutput = execSync(cmd);
-    // console.log('ttsOutput: ', ttsOutput);
-  }
+  try {
+    // generate mp3 with gTTS
+    if (!fs.existsSync(mp3PathFile)) {
+      const cmd = `gtts-cli --nocheck --lang ${config.lang} "${msg}" --output "${mp3PathFile}"`;
+      // console.log('cmd: ', cmd);
+      const ttsOutput = execSync(cmd);
+      // console.log('ttsOutput: ', ttsOutput);
+    }
 
-  // play mp3
-  const mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`);
-  // console.log('mp3Output: ', mp3Output);
-  return mp3Output;
+    // play mp3
+    const mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`);
+    // console.log('mp3Output: ', mp3Output);
+    return mp3Output;
+  } catch (e) {
+    log(`error ttsSay: ${msg}, retry after 1 sec...`);
+    console.error(e);
+    setTimeout(() => ttsSay(msg), 1000);
+  }
 };
 
 const mqttInit = () => {
@@ -51,13 +61,7 @@ const mqttInit = () => {
   client.subscribe(config.ttsTopic);
   client.on('message', (topic, message) => {
     const msg = message.toString().toLowerCase();
-    try {
-      ttsSay(msg);
-    } catch (e) {
-      log(`error ttsSay: ${msg}, retry after 1 sec...`);
-      console.error(e);
-      setTimeout(() => ttsSay(msg), 1000);
-    }
+    ttsSay(msg);
   });
 };
 
