@@ -19,6 +19,8 @@ const log = msg => {
 };
 
 const ttsSay = msg => {
+  msg = msg.toLowerCase();
+  msg = msg.replace(/[^. a-zа-я0-9_-]/g,'');
   log(msg);
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
 
@@ -60,8 +62,7 @@ const mqttInit = () => {
 
   client.subscribe(config.ttsTopic);
   client.on('message', (topic, message) => {
-    const msg = message.toString().toLowerCase();
-    ttsSay(msg);
+    ttsSay(message.toString());
   });
 };
 
