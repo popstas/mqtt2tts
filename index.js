@@ -3,6 +3,9 @@ const execSync = require('child_process').execSync;
 const mqtt = require('mqtt');
 const config = require('./config');
 
+const maxRetry = 10;
+const retryDelay = 1000;
+
 // for tts cache
 const mp3Path = './data';
 if (!fs.existsSync(mp3Path)) {
@@ -18,13 +21,15 @@ const log = msg => {
   console.log(`${d} ${msg}`);
 };
 
-const ttsSay = msg => {
+const ttsSay = (msg, tryNum = 1) => {
   msg = msg.toLowerCase();
   msg = msg.replace(/[^. a-zа-я0-9_-]/g,'');
   log(msg);
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
 
   try {
+    if (tryNum > maxRetry) return false;
+
     // generate mp3 with gTTS
     if (!fs.existsSync(mp3PathFile)) {
       const cmd = `gtts-cli --nocheck --lang ${config.lang} "${msg}" --output "${mp3PathFile}"`;
@@ -38,9 +43,9 @@ const ttsSay = msg => {
     // console.log('mp3Output: ', mp3Output);
     return mp3Output;
   } catch (e) {
-    log(`error ttsSay: ${msg}, retry after 1 sec...`);
-    console.error(e);
-    setTimeout(() => ttsSay(msg), 1000);
+    log(`error ttsSay: ${msg}, retry ${tryNum} of ${maxRetry} after 1 sec...`);
+    // console.error(e);
+    setTimeout(() => ttsSay(msg, tryNum + 1), retryDelay);
   }
 };
 
