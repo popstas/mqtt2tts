@@ -1,3 +1,5 @@
+const os = require('os');
+
 module.exports = {
   mqtt: {
     host: 'localhost',
@@ -6,6 +8,6 @@ module.exports = {
     password: 'password'
   },
   ttsTopic: 'tts',
-  playCommand: 'cmdmp3',
+  playCommand: os.platform() == 'linux' ? 'mpg321 -q' : 'cmdmp3',
   lang: 'ru'
 };

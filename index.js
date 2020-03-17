@@ -40,7 +40,7 @@ const ttsSay = (msg, tryNum = 1) => {
 
     // play mp3
     const mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`);
-    // console.log('mp3Output: ', mp3Output);
+    // console.log(`${config.playCommand} "${mp3PathFile}"`);
     return mp3Output;
   } catch (e) {
     log(`error ttsSay: ${msg}, retry ${tryNum} of ${maxRetry} after 1 sec...`);

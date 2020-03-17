@@ -1,11 +1,11 @@
-Receive text from MQTT and TTS via Google TTS on Windows.
+Receive text from MQTT and TTS via Google TTS on Windows and Linux.
 
-Tested only on Windows. Will work on Linux too.
+Tested on Windows 10 and Ubuntu 18.04.
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/)
 - [cmd2mp3](https://github.com/jimlawless/cmdmp3) for Windows
-- `apt install ogg123` for Ubuntu
+- `apt install mpg123` for Ubuntu
 - [gTTS](https://github.com/pndurette/gTTS)
 
 ## Install
@@ -16,14 +16,13 @@ Install gTTS:
 pip install gTTS
 ```
 
-Download cmd2mp3, place to PATH, or replace `playCommand` to your in command.
+For Windows: download cmd2mp3, place to PATH, or replace `playCommand` to your in command.
 
 Clone this repository.
 
 ## Config
 - Copy `config.example.js` to `config.js`
 - Edit `config.js`
-- For Ubuntu replace `cmdmp3` to `playogg` in `config.js`
 
 ## Usage
 `npm start` or just open `node start.lnk`.
