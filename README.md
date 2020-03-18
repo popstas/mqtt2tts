@@ -1,5 +1,7 @@
 Receive text from MQTT and TTS via Google TTS on Windows and Linux.
 
+Ajustable syncronous say.
+
 Tested on Windows 10 and Ubuntu 18.04.
 
 ## Requirements
@@ -32,6 +34,8 @@ Default host: `localhost:1883`.
 Default MQTT topic: `tts`.
 
 Tool will save mp3 to `./data` directory for cache.
+
+You can send message with timestamp: `hello|1584547867492` and ajust `gap` variable, for syncronous say.
 
 ## Linux bash verion
 Requirements: gtts, playogg (ogg123 package).

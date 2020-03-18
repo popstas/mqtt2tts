@@ -1,10 +1,14 @@
 const fs = require('fs');
+const os = require('os');
 const execSync = require('child_process').execSync;
 const mqtt = require('mqtt');
 const config = require('./config');
 
 const maxRetry = 10;
 const retryDelay = 1000;
+
+const ttsDelay = 2000; // макс. время задержки в получении и генерации mp3, если в сообщении приходит msg|1234567889, то в конце - время отправки
+const gap = os.platform == 'linux' ? 0 : -370; // подобрано методом тыка, разница между Windows и Ubuntu
 
 // for tts cache
 const mp3Path = './data';
@@ -23,6 +27,15 @@ const log = msg => {
 
 const ttsSay = (msg, tryNum = 1) => {
   msg = msg.toLowerCase();
+
+  let sendTime = msg.match(/\|(\d+)$/);
+  if(sendTime){
+    sendTime = parseInt(sendTime[1]);
+    msg = msg.replace(/\|(\d)+$/, '');
+  } else {
+    sendTime = Date.now();
+  }
+
   msg = msg.replace(/[^. a-zа-я0-9_-]/g,'');
   log(msg);
   const mp3PathFile = `${mp3Path}/${msg}.mp3`;
@@ -39,7 +52,13 @@ const ttsSay = (msg, tryNum = 1) => {
     }
 
     // play mp3
-    const mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`);
+    let mp3Output;
+    const delay = sendTime ? sendTime + ttsDelay - Date.now() + gap : 0;
+    // console.log('sent: ', new Date(sendTime));
+    // console.log('current: ', new Date());
+    // console.log('tts time: ', new Date(sendTime + ttsDelay));
+    // console.log('delay: ', delay);
+    setTimeout(() => { mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`) }, delay);
     // console.log(`${config.playCommand} "${mp3PathFile}"`);
     return mp3Output;
   } catch (e) {
