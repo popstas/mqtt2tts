@@ -8,6 +8,6 @@ module.exports = {
     password: 'password'
   },
   ttsTopic: 'tts',
-  playCommand: os.platform() == 'linux' ? 'mpg321 -q' : 'cmdmp3',
+  playCommand: os.platform() == 'linux' ? 'mpg321 -q' : 'mpg123',
   lang: 'ru'
 };

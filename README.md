@@ -6,8 +6,8 @@ Tested on Windows 10 and Ubuntu 18.04.
 
 ## Requirements
 - [Node.js](https://nodejs.org/en/)
-- [cmd2mp3](https://github.com/jimlawless/cmdmp3) for Windows
-- `apt install mpg123` for Ubuntu
+- [mpg123](https://www.mpg123.de/download.shtml) for Windows
+- `apt install mpg321` for Ubuntu
 - [gTTS](https://github.com/pndurette/gTTS)
 
 ## Install
@@ -36,6 +36,9 @@ Default MQTT topic: `tts`.
 Tool will save mp3 to `./data` directory for cache.
 
 You can send message with timestamp: `hello|1584547867492` and ajust `gap` variable, for syncronous say.
+
+#### TTS accents
+Support `+` as accent and `,` for pauses.
 
 ## Linux bash verion
 Requirements: gtts, playogg (ogg123 package).
