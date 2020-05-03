@@ -22,6 +22,40 @@ For Windows: download cmd2mp3, place to PATH, or replace `playCommand` to your i
 
 Clone this repository.
 
+### Install as Windows service
+```
+npm run install-windows
+```
+
+By default service run as user SYSTEM. This discard your gTTS and mpg123 paths.
+
+Edit service for run as your user.
+
+### Install as Ubuntu service
+Create `/etc/systemd/system/mqtt2tts.service`.
+
+Edit your path:
+```
+[Unit]
+Description=mqtt2tts
+DefaultDependencies=no
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=cd ~/projects/js/mqtt2tts && npm start
+TimeoutSec=0
+User=popstas
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then run `systemctl enable mqtt2tts.service`.
+
+
 ## Config
 - Copy `config.example.js` to `config.js`
 - Edit `config.js`

@@ -4,11 +4,14 @@
   "description": "Receive text from MQTT and TTS via Google TTS",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "install-windows": "node scripts/service-install.js",
+    "uninstall-windows": "node scripts/service-uninstall.js"
   },
   "author": "Stanislav Popov",
   "license": "MIT",
   "dependencies": {
-    "mqtt": "^3.0.0"
+    "mqtt": "^3.0.0",
+    "node-windows": "^1.0.0-beta.1"
   }
 }

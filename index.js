@@ -2,6 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const execSync = require('child_process').execSync;
 const mqtt = require('mqtt');
+const EventLogger = require('node-windows').EventLogger;
 const config = require('./config');
 
 const maxRetry = 10;
@@ -16,13 +17,17 @@ if (!fs.existsSync(mp3Path)) {
   fs.mkdir(mp3Path);
 }
 
-const log = msg => {
+const windowsLogger = new EventLogger('mqtt2tts');
+
+const log = (msg, type = 'info') => {
   const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
   const d = new Date(Date.now() - tzoffset).
     toISOString().
     replace(/T/, ' ').      // replace T with a space
     replace(/\..+/, '')     // delete the dot and everything after
-  console.log(`${d} ${msg}`);
+
+  console[type](`${d} ${msg}`);
+  windowsLogger[type](msg);
 };
 
 const ttsSay = (msg, tryNum = 1) => {
@@ -47,7 +52,7 @@ const ttsSay = (msg, tryNum = 1) => {
     // generate mp3 with gTTS
     if (!fs.existsSync(mp3PathFile)) {
       const cmd = `gtts-cli --nocheck --lang ${config.lang} "${msg}" --output "${mp3PathFile}"`;
-      // console.log('cmd: ', cmd);
+      // log(`cmd: ${cmd}`);
       const ttsOutput = execSync(cmd);
       // console.log('ttsOutput: ', ttsOutput);
     }
@@ -61,15 +66,16 @@ const ttsSay = (msg, tryNum = 1) => {
     // console.log('delay:    ', delay);
     setTimeout(() => {
       try {
+        // log(`${config.playCommand} "${mp3PathFile}"`);
         mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`)
       } catch(e) {
-        log(`error play ${mp3PathFile}`);
+        log(`error play ${mp3PathFile}`, 'error');
       }
     }, delay);
     // console.log(`${config.playCommand} "${mp3PathFile}"`);
     return mp3Output;
   } catch (e) {
-    log(`error ttsSay: ${msg}, retry ${tryNum} of ${maxRetry} after 1 sec...`);
+    log(`error ttsSay: ${msg}, retry ${tryNum} of ${maxRetry} after 1 sec...`, 'error');
     // console.error(e);
     setTimeout(() => ttsSay(msg, tryNum + 1), retryDelay);
   }
@@ -88,7 +94,7 @@ const mqttInit = () => {
   });
 
   client.on('offline', () => {
-    log('MQTT offline');
+    log('MQTT offline', 'warn');
   });
 
   client.subscribe(config.ttsTopic);
