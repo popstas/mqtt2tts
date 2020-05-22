@@ -1,8 +1,13 @@
 const fs = require('fs');
 const os = require('os');
+const isWindows = os.platform == 'win32';
 const execSync = require('child_process').execSync;
 const mqtt = require('mqtt');
-const EventLogger = require('node-windows').EventLogger;
+let windowsLogger;
+if (isWindows) {
+  const EventLogger = require('node-windows').EventLogger;
+  windowsLogger = new EventLogger('mqtt2tts');
+}
 const config = require('./config');
 
 const maxRetry = 10;
@@ -17,8 +22,6 @@ if (!fs.existsSync(mp3Path)) {
   fs.mkdir(mp3Path);
 }
 
-const windowsLogger = new EventLogger('mqtt2tts');
-
 const log = (msg, type = 'info') => {
   const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
   const d = new Date(Date.now() - tzoffset).
@@ -27,7 +30,7 @@ const log = (msg, type = 'info') => {
     replace(/\..+/, '')     // delete the dot and everything after
 
   console[type](`${d} ${msg}`);
-  windowsLogger[type](msg);
+  if (isWindows) windowsLogger[type](msg);
 };
 
 const ttsSay = (msg, tryNum = 1) => {
