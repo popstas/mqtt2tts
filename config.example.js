@@ -9,5 +9,7 @@ module.exports = {
   },
   ttsTopic: 'tts',
   playCommand: os.platform() == 'linux' ? 'mpg321 -q' : 'mpg123 -q',
-  lang: 'ru' // en
+  lang: 'ru', // en
+  gapLinux: 200,
+  gapNoLinux: 0,
 };

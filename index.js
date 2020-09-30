@@ -14,7 +14,7 @@ const maxRetry = 10;
 const retryDelay = 1000;
 
 const ttsDelay = 0; // макс. время задержки в получении и генерации mp3, если в сообщении приходит msg|1234567889, то в конце - время отправки
-const gap = os.platform == 'linux' ? 0 : -370; // подобрано методом тыка, разница между Windows и Ubuntu
+const gap = os.platform == 'linux' ? config.gapLinux : config.gapNoLinux; // подобрано методом тыка, разница между Windows и Ubuntu
 
 // for tts cache
 const mp3Path = './data';
@@ -69,7 +69,7 @@ const ttsSay = (msg, tryNum = 1) => {
     // console.log('delay:    ', delay);
     setTimeout(() => {
       try {
-        // log(`${config.playCommand} "${mp3PathFile}"`);
+        log(`${config.playCommand} "${mp3PathFile}"`);
         mp3Output = execSync(`${config.playCommand} "${mp3PathFile}"`)
       } catch(e) {
         log(`error play ${mp3PathFile}`, 'error');
